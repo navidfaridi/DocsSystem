@@ -1,0 +1,94 @@
+﻿@{
+	var pageName = (string)ViewBag.PageName;
+	var lang = (string)ViewBag.Lang;
+	
+	if (!string.IsNullOrEmpty(lang))
+	{
+		pageName = $"{pageName}?lang={lang}";
+	}
+	var shikiPageName = $"shiki_{pageName}";
+}
+
+<div class="language-json">
+	curl -X 'POST' \
+	'https://shadapi.noyanet.com/api/v1/Account/login' \
+	-H 'accept: text/plain' \
+	-H 'Content-Type: application/json' \
+	-d '{
+	"landingId": [your landingId],
+	"username": "[your username]",
+	"password": "[your password]"
+	}'
+</div>
+@if (lang == "fa")
+{
+	<div style="direction:rtl">
+		<div id="html-output"></div>
+	</div>
+}
+else
+{
+	<div id="html-output"></div>
+}
+<script type="module">
+	
+	import { codeToHtml } from 'https://esm.sh/shiki@1.0.0';
+
+	
+	async function loadAndHighlight() {
+	
+		const url = '/gethtml/@Html.Raw(pageName)';
+		const response = await fetch(url);
+
+		if (!response.ok) {
+			throw new Error(`Error: ${response.status}`);
+		}
+
+	
+		let html = await response.text();
+
+		html = html.replace("<pre><code>", "<div class='language-bash'> ");
+		html = html.replace(/<pre><code /g, "<div ");
+		html = html.replace(/<\/code><\/pre>/g, "</div>");
+
+		// قرار دادن HTML اصلاح‌شده در صفحه
+		document.getElementById('html-output').innerHTML = html;
+		await saveHtmlContent('@Html.Raw(shikiPageName)', html);
+		// هایلایت کردن کدهای موجود در تگ‌های div
+		document.querySelectorAll('div[class^="language-"]').forEach(async (block) => {
+			const lang = block.className.split('language-')[1];
+			const highlightedCode = await codeToHtml(block.textContent.trim(), {
+				lang: lang || 'js',
+				theme: 'rose-pine'
+			});
+			block.innerHTML = highlightedCode;
+		});
+	}
+
+	async function saveHtmlContent(filename, content) {
+		try {
+
+			const response = await fetch('/savehtml', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					filename: filename,
+					content: content,
+					language: '@lang'
+				})
+			});
+
+			if (response.ok) {
+				console.log('HTML saved successfully!');
+			} else {
+				throw new Error(`Save failed: ${response.statusText}`);
+			}
+		} catch (error) {
+			console.error('Error saving HTML:', error);
+		}
+	}
+	// فراخوانی تابع
+	loadAndHighlight();
+</script>

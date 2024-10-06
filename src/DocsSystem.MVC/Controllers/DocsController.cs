@@ -17,7 +17,17 @@ public class DocsController : Controller
         var markdownContent = System.IO.File.ReadAllText(markdownPath);
         return markdownContent;
     }
-
+    [Route("gethtml/{pageName}")]
+    public string GetHtmlData(string pageName, string lang = "")
+    {
+        if (!string.IsNullOrEmpty(lang))
+        {
+            pageName = $"{lang}/{pageName}";
+        }
+        var markdownPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/dist/html", pageName + ".html");
+        var markdownContent = System.IO.File.ReadAllText(markdownPath);
+        return markdownContent;
+    }
     [HttpPost("savehtml")]
     public IActionResult SaveHtml([FromBody] SavehtmlModel model)
     {
@@ -54,16 +64,17 @@ public class DocsController : Controller
     }
 
     [Route("docs/{pageName}")]
-    public IActionResult showMd(string pageName)
+    public IActionResult showMd(string pageName, string plugin = "prism")
     {
-
         ViewBag.PageName = pageName;
         ViewBag.Lang = "";
+        if (plugin == "shiki")
+            return View("showmdShiki");
         return View();
     }
 
     [Route("docs/{lang}/{pageName}")]
-    public IActionResult showMd(string lang, string pageName = "")
+    public IActionResult showMd(string lang, string pageName = "", string plugin = "prism")
     {
         if (string.IsNullOrEmpty(pageName) && !string.IsNullOrEmpty(lang))
         {
@@ -72,6 +83,9 @@ public class DocsController : Controller
         }
         ViewBag.PageName = pageName;
         ViewBag.Lang = lang;
+        if (plugin == "shiki")
+            return View("showmdShiki");
+
         return View();
     }
 
