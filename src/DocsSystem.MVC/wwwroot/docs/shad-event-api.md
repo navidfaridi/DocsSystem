@@ -1,7 +1,6 @@
 
 # Shad Event Service API Documentation
 
-
 ## Introduction
 
 The Shad Event Service is designed and implemented to facilitate the management and participation of users in events related to cultural, social, and educational activities. This service enables the redirection of Shad users to the event platform without the need for repeated authentication, ensuring a seamless experience for participants.
@@ -21,7 +20,7 @@ To configure an event, the following information is required:
 - The link should be structured as a **QueryString** parameter using the `UserID` value as follows:
 
 #### Example:
-```
+```bash
 https://mysite.ir/shad?UserID=D4-76-29-46-BA-E1-88-74-C1-51-89-2A-D1-A8-58-C0
 ```
 In this example, the `UserID` parameter is the identifier of the user in Shad.
@@ -34,7 +33,7 @@ In this example, the `UserID` parameter is the identifier of the user in Shad.
 This method is used to authenticate the event organizer and retrieve a token for further interactions.
 
 - **URL**
-  ```
+  ```bash
   https://shadapi.noyanet.com/api/v1/Account/login
   ```
 

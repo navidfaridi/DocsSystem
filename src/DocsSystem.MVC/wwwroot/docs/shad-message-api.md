@@ -1,9 +1,3 @@
-<!-- <style>
-aside.VPSidebar, header.VPNav {
-  display: '';
-}
-</style> -->
-
 # Shad Send Message Service API Documentation
 
 ## Introduction
@@ -16,7 +10,7 @@ To use the service, the following configurations must be completed:
 
 1. **Username and Password**:
    - Users will receive a username and password to log in to the Shad Hamyar platform at the URL:
-   ```
+   ```bash
    http://hamyar.shadnoyan.com/
    ```
    
@@ -37,7 +31,7 @@ To use the service, the following configurations must be completed:
 This method is used to send multiple messages to users via the Shad platform.
 
 - **URL**:
-  ```
+  ```bash
   https://msg.shadnoyan.com/api/v1/Shad/SendMessages
   ```
 

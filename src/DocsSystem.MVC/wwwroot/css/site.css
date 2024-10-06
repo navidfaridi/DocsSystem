@@ -1,4 +1,4 @@
-html {
+﻿html {
   font-size: 14px;
 }
 
@@ -20,3 +20,15 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+pre, code {
+    direction: ltr; /* جهت پیش‌فرض برای نمایش کدها */
+    unicode-bidi: isolate; /* جلوگیری از تغییر ترتیب */
+}
+
+
+    pre code.rtl {
+        direction: rtl; /* جهت‌دهی راست به چپ */
+        unicode-bidi: plaintext; /* تغییر نحوه ترتیب کاراکترها برای نمایش صحیح */
+        text-align: left; /* اطمینان از نمایش صحیح */
+    }

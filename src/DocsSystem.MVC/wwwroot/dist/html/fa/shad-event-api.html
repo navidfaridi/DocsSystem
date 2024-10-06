@@ -1,0 +1,163 @@
+﻿<h1>مستندات سرویس رویداد در شاد</h1>
+<h2>مقدمه</h2>
+<p>سرویس رویداد در شاد برای مدیریت و مشارکت کاربران در رویدادهای فرهنگی، اجتماعی و آموزشی طراحی و پیاده‌سازی شده است. این سرویس امکان هدایت کاربران شاد به سامانه پویش را بدون نیاز به احراز هویت مجدد فراهم می‌کند و تجربه کاربری روانی را تضمین می‌کند.</p>
+<p>برای استفاده از این سرویس، سازمان برگزارکننده باید مجوزهای لازم را دریافت کرده و تنظیمات رویداد را در سیستم شاد پیکربندی نماید. پس از تنظیم، رویداد می‌تواند در اپلیکیشن شاد نمایش داده شود و کاربران از طریق لینک مشخص به آن دسترسی داشته باشند.</p>
+<h2>پیکربندی رویداد</h2>
+<p>برای پیکربندی یک رویداد، اطلاعات زیر مورد نیاز است:</p>
+<h3>شناسه رویداد، نام کاربری و رمز عبور</h3>
+<p>این اطلاعات برای احراز هویت سازمان‌ها استفاده می‌شود. جزئیات توسط تیم عملیات شاد ارائه می‌شود.</p>
+<h3>لینک اتصال</h3>
+<p>برگزارکننده رویداد باید یک لینک هدایت مشخص برای کاربران شاد جهت هدایت به صفحه اختصاصی رویداد فراهم کند.
+این لینک باید به صورت یک پارامتر <strong>QueryString</strong> شامل مقدار <code>UserID</code> ساختاردهی شود:</p>
+<h4>مثال:</h4>
+<pre><code class="language-bash">https://mysite.ir/shad?UserID=D4-76-29-46-BA-E1-88-74-C1-51-89-2A-D1-A8-58-C0
+</code></pre>
+<p>در این مثال، <code>UserID</code> شناسه کاربر در شاد است.</p>
+<h2>متدهای وب سرویس</h2>
+<h3>متد <code>Login</code></h3>
+<p>این متد برای احراز هویت برگزارکننده رویداد و دریافت توکن برای تعاملات بعدی استفاده می‌شود.</p>
+<p><strong>آدرس</strong>:</p>
+<pre><code class="language-bash">https://shadapi.noyanet.com/api/v1/Account/login
+</code></pre>
+<p><strong>پارامترهای ورودی</strong>:</p>
+<table class='table table-striped table-hover'>
+<thead>
+<tr>
+<th><strong>پارامتر</strong></th>
+<th><strong>نوع</strong></th>
+<th><strong>اجباری</strong></th>
+<th><strong>توضیحات</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>landingId</code></td>
+<td><code>int</code></td>
+<td>بله</td>
+<td>شناسه منحصربه‌فرد برای رویداد</td>
+</tr>
+<tr>
+<td><code>username</code></td>
+<td><code>string</code></td>
+<td>بله</td>
+<td>نام کاربری ارائه‌شده برای رویداد</td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td><code>string</code></td>
+<td>بله</td>
+<td>رمز عبور ارائه‌شده برای رویداد</td>
+</tr>
+</tbody>
+</table>
+<p><strong>نمونه درخواست</strong>:</p>
+<pre><code class="language-bash">curl -X 'POST' \
+'https://shadapi.noyanet.com/api/v1/Account/login' \
+-H 'accept: text/plain' \
+-H 'Content-Type: application/json' \
+-d '{
+  "landingId": [your landingId],
+  "username": "[your username]",
+  "password": "[your password]"
+}'
+</code></pre>
+<p><strong>نمونه پاسخ</strong>:</p>
+<pre><code class="language-json">{
+  "data": "[Token]",
+  "success": true,
+  "statusCode": "OK",
+  "code": 200,
+  "description": "با موفقیت انجام شد"
+}
+</code></pre>
+<h3>متد <code>ShadEvent</code></h3>
+<p>این متد برای دریافت اطلاعات کاربر پس از احراز هویت موفق استفاده می‌شود.</p>
+<p><strong>آدرس</strong>:</p>
+<pre><code>https://shadapi.noyanet.com/api/v1/ShadEvent?UserHashId=[your userId]
+</code></pre>
+<p><strong>پارامترهای ورودی</strong>:</p>
+<table>
+<thead>
+<tr>
+<th><strong>پارامتر</strong></th>
+<th><strong>نوع</strong></th>
+<th><strong>اجباری</strong></th>
+<th><strong>توضیحات</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Token</code></td>
+<td><code>string</code></td>
+<td>بله</td>
+<td>توکن دریافتی از متد <code>Login</code> در هدر</td>
+</tr>
+<tr>
+<td><code>UserHashId</code></td>
+<td><code>string</code></td>
+<td>بله</td>
+<td>شناسه منحصربه‌فرد کاربر</td>
+</tr>
+</tbody>
+</table>
+<p><strong>نمونه درخواست</strong>:</p>
+<pre><code class="language-bash">curl -X 'GET' \
+'https://shadapi.noyanet.com/api/v1/ShadEvent?UserHashId=[your userId]' \
+-H 'accept: text/plain' \
+-H 'Authorization: Bearer [token]'
+</code></pre>
+<p><strong>نمونه پاسخ برای کاربر احراز هویت شده</strong>:</p>
+<pre><code class="language-json">{
+  "data": {
+    "id": 516222,
+    "nationalId": null,
+    "hashedId": "C3-A4-F5-C2-27-14-D9-56-A6-A0-AE-90-3A-E0-CF-2E",
+    "name": "رونيكا",
+    "family": "نادم كچائي",
+    "event": null,
+    "provinceName": "گیلان",
+    "mobile": "989226670378",
+    "courseStudy": "دوره ابتدایی توصیفی",
+    "districtName": "1رشت .ناحیه",
+    "fundamentalId": 3,
+    "role": "student"
+  },
+  "success": true,
+  "statusCode": 200,
+  "code": 200,
+  "description": "با موفقیت انجام شد"
+}
+</code></pre>
+<p><strong>نمونه پاسخ برای کاربر احراز هویت نشده</strong>:</p>
+<pre><code class="language-json">{
+  "data": {
+    "id": 516223,
+    "nationalId": null,
+    "hashedId": "E7-17-70-D6-D0-37-26-FE-4F-74-A7-ED-89-23-46-FC",
+    "name": null,
+    "family": null,
+    "event": null,
+    "provinceName": null,
+    "mobile": "989388332389",
+    "courseStudy": null,
+    "districtName": null,
+    "fundamentalId": null,
+    "role": null
+  },
+  "success": true,
+  "statusCode": 200,
+  "code": 200,
+  "description": "با موفقیت انجام شد"
+}
+</code></pre>
+<h2>جریان کاری رویداد</h2>
+<p>مراحل زیر جریان کاری رویداد را برای کاربران شاد توضیح می‌دهد:</p>
+<ol>
+<li><strong>کاربر بر روی لینک رویداد</strong> در اپلیکیشن شاد کلیک می‌کند.</li>
+<li>کاربر به <strong>لینک اتصال مشخص‌شده</strong> هدایت می‌شود (<code>UserID</code> به عنوان پارامتر ارسال می‌شود).</li>
+<li>برگزارکننده رویداد از متد <code>Login</code> استفاده کرده و <strong>توکن</strong> دریافت می‌کند.</li>
+<li>برگزارکننده با استفاده از متد <code>ShadEvent</code> و توکن، <strong>اطلاعات کاربر را دریافت</strong> و پلتفرم رویداد را به‌روزرسانی می‌کند.</li>
+</ol>
+<hr>
+<p><strong>نسخه</strong>: 1403، شهریور ماه<br>
+<strong>منتشرکننده</strong>: شرکت فن‌آوری شبکه آموزش دانش‌نویان</p>

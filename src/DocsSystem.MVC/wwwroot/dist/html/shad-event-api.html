@@ -1,0 +1,190 @@
+﻿<h1>Shad Event Service API Documentation</h1>
+<h2>Introduction</h2>
+<p>The Shad Event Service is designed and implemented to facilitate the management and participation of users in events related to cultural, social, and educational activities. This service enables the redirection of Shad users to the event platform without the need for repeated authentication, ensuring a seamless experience for participants.</p>
+<p>To use this service, the event organizer must obtain the required permissions and configure the event settings in the Shad system. Once configured, the event can be displayed in the Shad application, allowing users to access the event through a specified link.</p>
+<h2>Event Configuration</h2>
+<p>To configure an event, the following information is required:</p>
+<h3>Event ID, Username, and Password</h3>
+<ul>
+<li>This information is needed for event organizers to authenticate users. The details will be provided by the Shad operations team.</li>
+</ul>
+<h3>Connection Link</h3>
+<ul>
+<li>The event organizer needs to provide a redirection link to guide Shad users to the event’s specific page.</li>
+<li>The link should be structured as a <strong>QueryString</strong> parameter using the <code>UserID</code> value as follows:</li>
+</ul>
+<h4>Example:</h4>
+<pre><code class="language-bash">https://mysite.ir/shad?UserID=D4-76-29-46-BA-E1-88-74-C1-51-89-2A-D1-A8-58-C0
+</code></pre>
+<p>In this example, the <code>UserID</code> parameter is the identifier of the user in Shad.</p>
+<h2>Methods</h2>
+<h3><code>Login</code> Method</h3>
+<p>This method is used to authenticate the event organizer and retrieve a token for further interactions.</p>
+<ul>
+<li>
+<p><strong>URL</strong></p>
+<pre><code class="language-bash">https://shadapi.noyanet.com/api/v1/Account/login
+</code></pre>
+</li>
+<li>
+<p><strong>Input Parameters</strong></p>
+<table class='table table-striped table-hover'>
+<thead>
+<tr>
+<th><strong>Parameter</strong></th>
+<th><strong>Type</strong></th>
+<th><strong>Mandatory</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>landingId</code></td>
+<td><code>int</code></td>
+<td>Yes</td>
+<td>Unique identifier for the event.</td>
+</tr>
+<tr>
+<td><code>username</code></td>
+<td><code>string</code></td>
+<td>Yes</td>
+<td>The username provided for the event.</td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td><code>string</code></td>
+<td>Yes</td>
+<td>The password provided for the event.</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><strong>Example Request</strong></p>
+<pre><code class="language-bash">curl -X 'POST' \
+'https://shadapi.noyanet.com/api/v1/Account/login' \
+-H 'accept: text/plain' \
+-H 'Content-Type: application/json' \
+-d '{
+  "landingId": [your landingId],
+  "username": "[your username]",
+  "password": "[your password]"
+}'
+</code></pre>
+</li>
+<li>
+<p><strong>Response Example</strong></p>
+<pre><code class="language-json">{
+  "data": "[Token]",
+  "success": true,
+  "statusCode": "OK",
+  "code": 200,
+  "description": "با موفقیت انجام شد"
+}
+</code></pre>
+</li>
+</ul>
+<h2><code>ShadEvent</code> Method</h2>
+<p>This method is used to retrieve the user's information after successful authentication.</p>
+<ul>
+<li>
+<p><strong>URL</strong>:</p>
+<pre><code>https://shadapi.noyanet.com/api/v1/ShadEvent?UserHashId=[your userId]
+</code></pre>
+</li>
+<li>
+<p><strong>Input Parameters</strong>:</p>
+<table class='table table-striped table-hover'>
+<thead>
+<tr>
+<th><strong>Parameter</strong></th>
+<th><strong>Type</strong></th>
+<th><strong>Mandatory</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Token</code></td>
+<td><code>string</code></td>
+<td>Yes</td>
+<td>The token received from the <code>Login</code> method in the header.</td>
+</tr>
+<tr>
+<td><code>UserHashId</code></td>
+<td><code>string</code></td>
+<td>Yes</td>
+<td>The unique identifier of the user.</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><strong>Example Request</strong>:</p>
+<pre><code class="language-bash">curl -X 'GET' \
+'https://shadapi.noyanet.com/api/v1/ShadEvent?UserHashId=[your userId]' \
+-H 'accept: text/plain' \
+-H 'Authorization: Bearer [token]'
+</code></pre>
+</li>
+<li>
+<p><strong>Response Example</strong> for an authenticated user:</p>
+<pre><code class="language-json">{
+  "data": {
+    "id": 516222,
+    "nationalId": null,
+    "hashedId": "C3-A4-F5-C2-27-14-D9-56-A6-A0-AE-90-3A-E0-CF-2E",
+    "name": "رونيكا",
+    "family": "نادم كچائي",
+    "event": null,
+    "provinceName": "گیلان",
+    "mobile": "989226670378",
+    "courseStudy": "دوره ابتدایی توصیفی",
+    "districtName": "1رشت .ناحیه",
+    "fundamentalId": 3,
+    "role": "student"
+  },
+  "success": true,
+  "statusCode": 200,
+  "code": 200,
+  "description": "با موفقیت انجام شد"
+}
+</code></pre>
+</li>
+<li>
+<p><strong>Response Example</strong> for an unauthenticated user:</p>
+<pre><code class="language-json">{
+  "data": {
+    "id": 516223,
+    "nationalId": null,
+    "hashedId": "E7-17-70-D6-D0-37-26-FE-4F-74-A7-ED-89-23-46-FC",
+    "name": null,
+    "family": null,
+    "event": null,
+    "provinceName": null,
+    "mobile": "989388332389",
+    "courseStudy": null,
+    "districtName": null,
+    "fundamentalId": null,
+    "role": null
+  },
+  "success": true,
+  "statusCode": 200,
+  "code": 200,
+  "description": "با موفقیت انجام شد"
+}
+</code></pre>
+</li>
+</ul>
+<hr>
+<h2>Event Workflow</h2>
+<p>The following steps outline the event workflow for a Shad user:</p>
+<ol>
+<li><strong>User clicks on the event link</strong> in the Shad application.</li>
+<li>The user is redirected to the specified <strong>connection link</strong> (<code>UserID</code> is passed as a parameter).</li>
+<li>The event organizer authenticates using the <code>Login</code> method and retrieves a <strong>token</strong>.</li>
+<li>The organizer uses the <code>ShadEvent</code> method with the token and <code>UserID</code> to <strong>fetch user information</strong> and update the event platform.</li>
+</ol>
+<hr>
+<p><strong>Version</strong>: 2024, September<br>
+<strong>Publisher</strong>: ShadNoyan Network Technology Company</p>

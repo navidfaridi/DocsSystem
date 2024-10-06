@@ -1,8 +1,3 @@
-<!-- <style>
-aside.VPSidebar, header.VPNav {
-  display: '';
-}
-</style> -->
 # Shad Payment Gateway API Documentation
 
 ## Introduction
@@ -25,7 +20,7 @@ The Shad Payment Gateway API is designed and implemented to facilitate payment s
 This method is used to send a payment request through the Shad payment gateway.
 
 - **URL**  
-  ```
+  ```bash
   https://shadpaymentgateway.shadnoyan.com/api/v1/Payment/SendRequest
   ```
 

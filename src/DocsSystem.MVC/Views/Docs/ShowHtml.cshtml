@@ -1,0 +1,21 @@
+﻿@{
+	var htmlContent = (string)ViewBag.HtmlContent;
+	var lang = (string)ViewBag.Lang;
+}
+<link href="~/css/prism.css" rel="stylesheet" />
+@if (lang == "fa")
+{
+	<div style="direction:rtl">
+		<div id="html-output">
+			@Html.Raw(htmlContent)
+		</div>
+	</div>
+}
+else
+{
+	<div id="html-output">
+		@Html.Raw(htmlContent)
+	</div>
+}
+
+<script src="~/js/prism.js"></script>

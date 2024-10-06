@@ -1,0 +1,90 @@
+﻿@{
+	var pageName = (string)ViewBag.PageName;
+	var lang = (string)ViewBag.Lang;
+	if(!string.IsNullOrEmpty(lang))
+	{
+		pageName = $"{pageName}?lang={lang}";
+	}
+}
+<script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
+<link href="~/css/prism.css" rel="stylesheet" />
+<script src="~/js/prism.js"></script>
+@if(lang=="fa")
+{
+	<div style="direction:rtl">
+		<div id="html-output"></div>
+	</div>
+}
+else
+{
+	<div id="html-output"></div>
+}
+<script>	
+	async function loadMarkdown() {
+		try {
+			var url = '/md/@Html.Raw(pageName)';
+			
+			const response = await fetch(url);
+			if (!response.ok) {
+				throw new Error(`Error: ${response.status}`);
+			}
+			const markdownText = await response.text(); 
+			var md = window.markdownit({
+				highlight: function (code, lang) {
+					//md.utils.escapeHtml(
+					return `${code}`;
+				}
+			});
+			
+			var html = md.render(markdownText);
+			
+			html = html.replace("<table>", "<table class='table table-striped table-hover'>");			
+			html = html.replace("<table>", "<table class='table table-striped table-hover'>");
+
+			document.getElementById('html-output').innerHTML = html;
+			
+			document.querySelectorAll('pre code').forEach((block) => {
+				// بررسی کاراکترهای فارسی در بلوک کد
+				if (/[\u0600-\u06FF]/.test(block.innerText)) {
+					block.classList.add('rtl'); // افزودن کلاس rtl به بلوک‌های دارای متن فارسی
+				}
+			});
+
+			Prism.highlightAll();
+
+
+			await saveHtmlContent('@Html.Raw(pageName)', html);
+			
+		} catch (error) {
+			console.error('Error loading markdown:', error);
+			document.getElementById('html-output').innerText = 'Error loading content.';
+		}
+	}
+
+	async function saveHtmlContent(filename, content) {
+		try {
+			
+			const response = await fetch('/savehtml', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json' 
+				},
+				body: JSON.stringify({
+					filename: filename, 
+					content: content,
+					language: '@lang'
+				})
+			});
+			
+			if (response.ok) {
+				console.log('HTML saved successfully!');
+			} else {
+				throw new Error(`Save failed: ${response.statusText}`);
+			}
+		} catch (error) {
+			console.error('Error saving HTML:', error);
+		}
+	}
+
+	loadMarkdown();
+</script>
