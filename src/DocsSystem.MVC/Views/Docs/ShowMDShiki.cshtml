@@ -50,11 +50,10 @@ else
 		html = html.replace("<pre><code>", "<div class='language-bash'> ");
 		html = html.replace(/<pre><code /g, "<div ");
 		html = html.replace(/<\/code><\/pre>/g, "</div>");
-
-		// قرار دادن HTML اصلاح‌شده در صفحه
+		
 		document.getElementById('html-output').innerHTML = html;
 		await saveHtmlContent('@Html.Raw(shikiPageName)', html);
-		// هایلایت کردن کدهای موجود در تگ‌های div
+		
 		document.querySelectorAll('div[class^="language-"]').forEach(async (block) => {
 			const lang = block.className.split('language-')[1];
 			const highlightedCode = await codeToHtml(block.textContent.trim(), {
@@ -89,6 +88,6 @@ else
 			console.error('Error saving HTML:', error);
 		}
 	}
-	// فراخوانی تابع
+	
 	loadAndHighlight();
 </script>
