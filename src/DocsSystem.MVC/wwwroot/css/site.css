@@ -1,4 +1,6 @@
-﻿html {
+﻿@import url("fonts.css");
+
+html {
   font-size: 14px;
 }
 
@@ -22,13 +24,13 @@ body {
 }
 
 pre, code {
-    direction: ltr; /* جهت پیش‌فرض برای نمایش کدها */
-    unicode-bidi: isolate; /* جلوگیری از تغییر ترتیب */
+    direction: ltr; 
+    unicode-bidi: isolate; 
 }
 
 
     pre code.rtl {
-        direction: rtl; /* جهت‌دهی راست به چپ */
-        unicode-bidi: plaintext; /* تغییر نحوه ترتیب کاراکترها برای نمایش صحیح */
-        text-align: left; /* اطمینان از نمایش صحیح */
+        direction: rtl; 
+        unicode-bidi: plaintext; 
+        text-align: left; 
     }
