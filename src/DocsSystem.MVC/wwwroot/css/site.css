@@ -31,6 +31,7 @@ pre, code {
 
     pre code.rtl {
         direction: rtl; 
+        font-family:IRANSans;
         unicode-bidi: plaintext; 
         text-align: left; 
     }
